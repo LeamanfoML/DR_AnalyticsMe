@@ -1,6 +1,5 @@
-python-telegram-bot==13.7
-requests==2.26.0
-beautifulsoup4==4.9.3
-schedule==1.1.0
-python-dotenv==1.0.0
-flask==2.0.1  # Для health check
+python-telegram-bot==20.3
+flask==2.3.2
+requests==2.31.0
+beautifulsoup4==4.12.2
+schedule==1.2.0
