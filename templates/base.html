@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+    <link href="/static/css/style.css" rel="stylesheet">
+    <script src="/static/js/main.js" defer></script>
+</head>
+<body>
+    <header>
+        <h1>Arbitrage Bot</h1>
+        <nav>
+            <a href="/">Главная</a>
+            <a href="/settings">Настройки</a>
+            <a href="/deals">Сделки</a>
+        </nav>
+    </header>
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+    <footer>
+        <p>© 2023 Arbitrage Bot</p>
+    </footer>
+</body>
+</html>
