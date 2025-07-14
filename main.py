@@ -1,21 +1,50 @@
-import asyncio
 import logging
-from bot.bot import NFTBot
-from tasks.scheduler import Scheduler
+from telegram.ext import Updater, Dispatcher
+from config import Config
+from services.scheduler import DataScheduler
+from services.auth_manager import AuthManager
+from bot.handlers import BotHandlers
+from utils.logger import setup_logger
 
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-)
+# Настройка логгера
+logger = setup_logger('main')
 
-async def main():
-    bot = NFTBot()
-    scheduler = Scheduler()
+def main():
+    """Основная функция запуска бота"""
     
-    await bot.start()
-    asyncio.create_task(scheduler.run())
+    # Инициализация менеджера аутентификации
+    auth_manager = AuthManager()
+    auth_manager.initialize_tokens()
     
-    await bot.idle()
+    # Запуск бота
+    updater = Updater(token=Config.BOT_TOKEN, use_context=True)
+    dp = updater.dispatcher
+    
+    # Инициализация и запуск планировщика данных
+    scheduler = DataScheduler(updater.bot)
+    scheduler.start()
+    
+    # Инициализация обработчиков
+    handlers = BotHandlers(scheduler, auth_manager)
+    
+    # Регистрация обработчиков
+    dp.add_handler(CommandHandler("start", handlers.start))
+    dp.add_handler(CallbackQueryHandler(handlers.button_handler))
+    dp.add_error_handler(handlers.error_handler)
+    
+    # Запуск периодического обновления токенов
+    token_refresh_thread = threading.Thread(
+        target=auth_manager.run_token_refresh_scheduler,
+        daemon=True
+    )
+    token_refresh_thread.start()
+    
+    logger.info("Bot started")
+    updater.start_polling()
+    updater.idle()
+    
+    # Остановка планировщика при завершении
+    scheduler.stop()
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    main()
