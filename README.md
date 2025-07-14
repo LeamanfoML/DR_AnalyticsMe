@@ -1,6 +1,6 @@
 # DR_AnalyticsMe
 
-[Структура проекта]
+<<[Структура:::проекта]>>
 nft_arbitrage_bot/
 ├── config/
 │   ├── __init__.py
