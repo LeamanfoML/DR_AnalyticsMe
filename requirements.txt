@@ -1,5 +1,4 @@
-pyrogram==2.0.106
-aiohttp==3.9.3
+python-telegram-bot==20.3
+requests==2.31.0
+cryptography==42.0.5
 python-dotenv==1.0.0
-apscheduler==3.10.4
-sqlalchemy==2.0.25
